@@ -66,9 +66,9 @@
             nas25-nic1          ---     |                                   | nas25-ip4
             nas25-ip4           ----    | TCP 443                           | portainer-server
             nas25-nic1          ---     |                                   | nas25-ip5
+            media-backend       ---     | TCP 81 <br> Management            | nas25-nginx
             nas25-ip5           ---     | TCP 80/443 <br> Host Resolution   | nas25-nginx
             media-backend       ---     | TCP 30024 <br> Management         | qbittorrent
-            media-backend       ---     | TCP 81 <br> Management            | nas25-nginx
             media-backend       ---     | TCP 8096                          | jellyfin
             media-backend       ---     | TCP 5055                          | seerr
             media-backend       ---     | TCP 9696                          | prowlarr
