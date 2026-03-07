@@ -1,4 +1,5 @@
-# 2026-03-07
+# 2026-03-08
+
 ```mermaid
     flowchart
     %% Top Level Objects
@@ -18,8 +19,10 @@
                 pi-vpn-docker-network
                 pi-vpn-portainer-agent
                 subgraph docker-pi-vpn-stack [ VPN Stack ]
+                    pi-vpn-nginx
                     adguard-dns
                     pi-vpn-ddns
+                    pi-vpn-openvpn
                 end
             end
 
@@ -31,7 +34,9 @@
             pi-vpn-docker-network   ----     | 9001                          | pi-vpn-portainer-agent
             pi-vpn-docker-network   ----     | TCP/UDP 53 for DNS            | adguard-dns
             pi-vpn-docker-network   ----     | TCP 443 for Managment         | adguard-dns
+            pi-vpn-docker-network   ----     | TCP 443 / TCP 80              | pi-vpn-nginx
             pi-vpn-docker-network   ----     | N/A                           | pi-vpn-ddns
+            pi-vpn-docker-network   ----     | unknown                       | pi-vpn-openvpn
 
         subgraph nas25 [nas25.j-j.family]
         %% Assign Objects to nas25.j-j.family        
@@ -66,7 +71,6 @@
             nas25-nic1          ---     |                                   | nas25-ip4
             nas25-ip4           ----    | TCP 443                           | portainer-server
             nas25-nic1          ---     |                                   | nas25-ip5
-            nas25-ip5           ---     | TCP 80/443 <br> Host Resolution   | nas25-nginx
             media-backend       ---     | TCP 30024 <br> Management         | qbittorrent
             media-backend       ---     | TCP 81 <br> Management            | nas25-nginx
             media-backend       ---     | TCP 8096                          | jellyfin
@@ -77,8 +81,8 @@
             media-backend       ---     | TCP 7878                          | radarr
             media-backend       ---     | TCP 5299                          | LazyLibrarian
             nas25-ip3           ---     | TCP 443                           | nas25-webui
-            nas25-ip5           ----    |                                         | media-backend
-
+            nas25-ip5           ----    | TCP 443                           | media-backend
+            nas25-ip5           ---     | TCP 80/443 <br> Host Resolution   | nas25-nginx
 
             nas25-ip5           ----    | TCP/UDP 51413 <br> Torrent Stream | qbittorrent
 
@@ -96,6 +100,8 @@
         pi-vpn-docker-network((             Default <br> Docker <br> Network        ))
         pi-vpn-ddns[                        DDNS updater                            ]
         pi-vpn-portainer-agent[             Portainer Agent                         ]
+        pi-vpn-openvpn[                     OpenVPN Server                          ]
+        pi-vpn-nginx[                       NGINX                                   ]
         adguard-dns[                        ADGuardHome                             ]
         portainer-server[                   WebUI for Portainer                     ]
         nas25-webui[                        WebUI for nas25                         ]
