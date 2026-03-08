@@ -17,10 +17,8 @@
             subgraph docker-pi-vpn [Docker Daemon]
                 pi-vpn-docker-network
                 pi-vpn-portainer-agent
-                subgraph docker-pi-vpn-stack [ VPN Stack ]
-                    adguard-dns
-                    pi-vpn-ddns
-                end
+                adguard-dns
+                pi-vpn-ddns
             end
 
         end

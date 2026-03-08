@@ -1,4 +1,4 @@
-# 2026-03-08
+# 2026-03-10
 
 ```mermaid
     flowchart
@@ -23,6 +23,7 @@
                     adguard-dns
                     pi-vpn-ddns
                     pi-vpn-openvpn
+                    pi-vpn-cerbot
                 end
             end
 
@@ -37,6 +38,7 @@
             pi-vpn-docker-network   ----     | TCP 443 / TCP 80              | pi-vpn-nginx
             pi-vpn-docker-network   ----     | N/A                           | pi-vpn-ddns
             pi-vpn-docker-network   ----     | unknown                       | pi-vpn-openvpn
+            pi-vpn-docker-network   ----     |                               | pi-vpn-cerbot
 
         subgraph nas25 [nas25.j-j.family]
         %% Assign Objects to nas25.j-j.family        
@@ -89,7 +91,7 @@
     %% Label Objects
         eero((                              eero <br> Router                        ))
         ubiquiti1{{                         unmanaged switch <br> 2.5 gb            }}
-
+        pi-vpn-cerbot[                      CertBot                                 ]
         nas25-nic1{{                        enp5s0                                  }}
         nas25-ip3{                          192.168.4.3                             }
         nas25-ip4{                          192.168.4.4                             }
