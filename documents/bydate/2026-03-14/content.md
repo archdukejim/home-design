@@ -31,12 +31,14 @@
             subgraph pi-core-containers
                 pi-core-docker-net((                Default <br> Docker <br> Network        ))
                 pi-core-portainer-agent[            Portainer Agent                         ]
-                Bind9
-                StepCA
-                OpenLDAP
-                Keycloak
-                pi-core-pg-keycloak[(               PostgresDB <br> for <br> Keycloak       )]
-                pi-core-nginx[                      NGINX Proxy                             ]
+                subgraph core-stack
+                    pi-core-nginx[                      NGINX Proxy                             ]
+                    Bind9
+                    StepCA
+                    OpenLDAP
+                    Keycloak
+                    pi-core-pg-keycloak[(               PostgresDB <br> for <br> Keycloak       )]
+                end
             end
         end
 
@@ -78,28 +80,29 @@
         %% Connections in pi-vpn
             pi-vpn-nic1             ---      |                               | pi-vpn-ip2
             pi-vpn-cerbot           ---      |                               | pi-vpn-ip2
-            pi-vpn-ip2              ---      |                               | pi-vpn-docker-network
             pi-vpn-ip2              --->     | TCP 443                       | pi-vpn-nginx
-            pi-vpn-docker-network   --->     | TCP 9001                      | pi-vpn-portainer-agent
-            pi-vpn-ip2              --->     | TCP 9001                      | pi-vpn-portainer-agent
+            pi-vpn-ip2              ---      |                               | pi-vpn-docker-network
             pi-vpn-docker-network   ----     |                               | pi-vpn-nginx
             pi-vpn-docker-network   --->     | TCP 53 <br> UDP 53            | adguard-dns
             pi-vpn-docker-network   --->     | TCP 443 for Managment         | adguard-dns
             pi-vpn-docker-network   ----     |                               | pi-vpn-ddns
             pi-vpn-docker-network   --->     | unknown                       | pi-vpn-openvpn
+            pi-vpn-docker-network   --->     | TCP 9001                      | pi-vpn-portainer-agent
+            pi-vpn-ip2              --->     | TCP 9001                      | pi-vpn-portainer-agent
 
         %% Draw Connections within pi-core
+            pi-core-nic         ---     |                                   | pi-core-ip10
+            pi-core-ip10        ---     |                                   | pi-core-docker-net
+            pi-core-ip10        --->    | TCP 443 / 53 / 636                | pi-core-nginx
+            pi-core-docker-net  ----    |                                   | pi-core-nginx
             pi-core-docker-net  --->    | TCP 5432                          | pi-core-pg-keycloak
             pi-core-docker-net  --->    | TCP 8443                          | Keycloak
             pi-core-docker-net  --->    | TCP 636                           | OpenLDAP
             pi-core-docker-net  --->    | TCP/UDP 53                        | Bind9
             pi-core-docker-net  --->    |                                   | StepCA
-            pi-core-docker-net  ----    |                                   | pi-core-nginx
-            pi-core-ip10        --->    | TCP 443 / 53 / 636                | pi-core-nginx
-            pi-core-ip10        ---->   | TCP 9001                          | pi-core-portainer-agent
             pi-core-docker-net  ---     |                                   | pi-core-portainer-agent
-            pi-core-nic         ---     |                                   | pi-core-ip10
-            pi-core-ip10        ---     |                                   | pi-core-docker-net
+            pi-core-ip10        ---->   | TCP 9001                          | pi-core-portainer-agent
+
 
         %% Draw Connections within nas25
             nas25-nic1          ---     |                                   | nas25-ip3
